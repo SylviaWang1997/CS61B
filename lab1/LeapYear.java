@@ -8,7 +8,7 @@ public class LeapYear {
     		return true;
     	}
     	    return false;
-    }
+   }
     /** Calls isLeapYear to print correct statement.
      *  @param  year to be analyzed
      */
