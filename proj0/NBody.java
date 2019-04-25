@@ -59,8 +59,8 @@ public class NBody {
 			double T = Double.parseDouble(args[0]);
 			double dt = Double.parseDouble(args[1]);
 			String filename = args[2];
-			Planet[] planet = readPlanets(filename);
-			double radius = readRadius(filename);
+			Planet[] planet = NBody.readPlanets(filename);
+			double radius = NBody.readRadius(filename);
 			NBody.drawBackground(radius);
 
 			/** Draw all planets. */
@@ -69,6 +69,41 @@ public class NBody {
 		    for(int i=0; i<numberOfPlanet; i++) {
 		    	planet[i].draw();
 		    }
+
+		    StdDraw.enableDoubleBuffering();
+            int indexOfTime = 0; 
+            StdAudio.play("audio/2001.mid");
+
+		    for(double t = 0; t <= T;t += dt) {
+
+		    	double[] xForces = new double[numberOfPlanet]; 
+		    	double[] yForces = new double[numberOfPlanet];
+                int indexOfPlanet=0;
+
+		    	for(indexOfPlanet = 0; indexOfPlanet < planet.length; indexOfPlanet++) {
+					xForces[indexOfPlanet] = planet[indexOfPlanet].calcNetForceExertedByX(planet);
+		    		yForces[indexOfPlanet] = planet[indexOfPlanet].calcNetForceExertedByY(planet);
+		    	}
+
+				NBody.drawBackground(radius);
+
+		    	for(indexOfPlanet = 0; indexOfPlanet < planet.length; indexOfPlanet++) {
+					planet[indexOfPlanet].update(dt, xForces[indexOfPlanet], yForces[indexOfPlanet]);
+		    		planet[indexOfPlanet].draw();
+		    		StdDraw.show();
+		    	}
+		    		StdDraw.pause(10);
+		    		StdDraw.clear();
+		    }
+
+		    /** Print out the final state of the universe */
+		    StdOut.printf("%d\n", planet.length);
+			StdOut.printf("%.2e\n", radius);
+			for (int i = 0; i < planet.length; i++) {
+    			StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+                planet[i].xxPos, planet[i].yyPos, planet[i].xxVel,
+                planet[i].yyVel, planet[i].mass, planet[i].imgFileName);   
+            }
 
 		}
 }
